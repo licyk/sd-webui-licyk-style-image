@@ -17,9 +17,8 @@ class ScriptPostprocessingImageEffect(scripts_postprocessing.ScriptPostprocessin
                 opacity = gr.Slider(minimum=0, maximum=255, step=1, label="Noise opacity", value=128)
 
             with gr.Row():
-                chromatic_strength = gr.Slider(
-                    minimum=0, maximum=1, step=0.01, label="Chromatic strength", value=0.3)
-                chromatic_blur = gr.Checkbox(label='Blur')
+                chromatic_strength = gr.Slider(minimum=0, maximum=1, step=0.01, label="Chromatic strength", value=0.3)
+                chromatic_blur = gr.Checkbox(label="Blur")
 
         return {
             "enable": enable,
