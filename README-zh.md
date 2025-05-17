@@ -39,7 +39,7 @@ cd extensions
 使用 Git 命令下载该扩展：
 
 ```bash
-git clone https://github.com/licyk/advanced_euler_sampler_extension
+git clone https://github.com/licyk/sd-webui-licyk-style-image
 ```
 
 
@@ -47,7 +47,7 @@ git clone https://github.com/licyk/advanced_euler_sampler_extension
 进入 Stable Diffusion WebUI 界面后，点击`扩展`->`从网址安装`，将下方的链接填入`扩展的 git 仓库网址`输入框：
 
 ```
-https://github.com/licyk/advanced_euler_sampler_extension
+https://github.com/licyk/sd-webui-licyk-style-image
 ```
 
 点击`安装`下载该扩展。
@@ -57,7 +57,7 @@ https://github.com/licyk/advanced_euler_sampler_extension
 打开绘世启动器，点击`版本管理`->`安装新扩展`，在下方的`扩展 URL`输入框填入下方的链接
 
 ```
-https://github.com/licyk/advanced_euler_sampler_extension
+https://github.com/licyk/sd-webui-licyk-style-image
 ```
 
 点击输入框右侧的`安装`下载该扩展。

@@ -36,7 +36,7 @@ cd extensions
 Clone the repository using Git:
 
 ```bash
-git clone https://github.com/licyk/advanced_euler_sampler_extension
+git clone https://github.com/licyk/sd-webui-licyk-style-image
 ```
 
 
@@ -46,7 +46,7 @@ git clone https://github.com/licyk/advanced_euler_sampler_extension
 3. Paste the following URL in the repository field:
 
 ```
-https://github.com/licyk/advanced_euler_sampler_extension
+https://github.com/licyk/sd-webui-licyk-style-image
 ```
 
 4. Click `Install`.
@@ -58,7 +58,7 @@ https://github.com/licyk/advanced_euler_sampler_extension
 3. Enter the following URL in the extension URL field:
 
 ```
-https://github.com/licyk/advanced_euler_sampler_extension
+https://github.com/licyk/sd-webui-licyk-style-image
 ```
 
 4. Click the `Install` button adjacent to the input field
