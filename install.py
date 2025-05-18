@@ -35,7 +35,7 @@ def install_requirements(req_file):
                     if installed_version != package_version:
                         launch.run_pip(
                             f'install -U "{package}"',
-                            f"a1111-sd-webui-haku-img requirement: changing {package_name} version from {installed_version} to {package_version}",
+                            f"sd-webui-licyk-style-image requirement: changing {package_name} version from {installed_version} to {package_version}",
                         )
                 elif ">=" in package:
                     package_name, package_version = package.split(">=")
@@ -45,12 +45,12 @@ def install_requirements(req_file):
                     ) < comparable_version(package_version):
                         launch.run_pip(
                             f'install -U "{package}"',
-                            f"a1111-sd-webui-haku-img requirement: changing {package_name} version from {installed_version} to {package_version}",
+                            f"sd-webui-licyk-style-image requirement: changing {package_name} version from {installed_version} to {package_version}",
                         )
                 elif not launch.is_installed(extract_base_package(package)):
                     launch.run_pip(
                         f'install "{package}"',
-                        f"a1111-sd-webui-haku-img requirement: {package}",
+                        f"sd-webui-licyk-style-image requirement: {package}",
                     )
             except Exception as e:
                 print(e)
