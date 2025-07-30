@@ -49,7 +49,8 @@ def run_noise(
     image: ImageFile,
     noise_level: Optional[float] = 0.4,
     noise_color: Optional[tuple[int, int, int]] = (255, 255, 255),
-    opacity: Optional[int] = 128
+    opacity: Optional[int] = 128,
+    offset_percentage: Optional[int] = 20,
 ) -> Image:
     """
     Applies noise effect to an image
@@ -62,6 +63,7 @@ def run_noise(
             (default: white (255,255,255))
         opacity (int, optional): Noise opacity [0-255]
             0 = fully transparent, 255 = fully opaque (default: 128)
+        offset_percentage (int): Percentage range for offset (0-100) (default: 20)
 
     Returns:
         Image: New Image object with noise layer composited
@@ -70,7 +72,8 @@ def run_noise(
         image=image,
         noise_level=noise_level,
         noise_color=noise_color,
-        opacity=opacity
+        opacity=opacity,
+        offset_percentage=offset_percentage,
     )
 
 
@@ -83,12 +86,14 @@ def run(
     opacity: int,
     chromatic_strength: float,
     chromatic_blur: bool,
+    offset_percentage: int,
 ) -> Image:
     image = run_noise(
         image=image,
         noise_level=noise_strength,
         noise_color = (noise_r, noise_g, noise_b),
         opacity=opacity,
+        offset_percentage=offset_percentage,
     )
     image = run_chromatic(
         img=image,

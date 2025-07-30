@@ -18,6 +18,7 @@ def licyk_style_image_api(_: gr.Blocks, app: FastAPI):
         noise_r: int = Body(255, title="Noise color (R)"),
         noise_g: int = Body(255, title="Noise color (G)"),
         noise_b: int = Body(255, title="Noise color (B)"),
+        offset_percentage: int = Body(255, title="Noise color offset"),
         opacity: int = Body(128, title="Noise opacity"),
         chromatic_strength: float = Body(0.3, title="Chromatic strength"),
         chromatic_blur: bool = Body(False, title="Blur"),
@@ -46,6 +47,7 @@ def licyk_style_image_api(_: gr.Blocks, app: FastAPI):
             noise_r=noise_r,
             noise_g=noise_g,
             noise_b=noise_b,
+            offset_percentage=offset_percentage,
             opacity=opacity,
             chromatic_strength=chromatic_strength,
             chromatic_blur=chromatic_blur

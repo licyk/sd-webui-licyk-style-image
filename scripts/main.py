@@ -14,6 +14,7 @@ class ScriptPostprocessingImageEffect(scripts_postprocessing.ScriptPostprocessin
                 noise_r = gr.Slider(minimum=0, maximum=255, step=1, label="Noise color (R)", value=255)
                 noise_g = gr.Slider(minimum=0, maximum=255, step=1, label="Noise color (G)", value=255)
                 noise_b = gr.Slider(minimum=0, maximum=255, step=1, label="Noise color (B)", value=255)
+                offset_percentage = gr.Slider(minimum=0, maximum=100, step=1, label="Noise color offset", value=20)
                 opacity = gr.Slider(minimum=0, maximum=255, step=1, label="Noise opacity", value=128)
 
             with gr.Row():
@@ -26,12 +27,13 @@ class ScriptPostprocessingImageEffect(scripts_postprocessing.ScriptPostprocessin
             "noise_r": noise_r,
             "noise_g": noise_g,
             "noise_b": noise_b,
+            "offset_percentage": offset_percentage,
             "opacity": opacity,
             "chromatic_strength": chromatic_strength,
             "chromatic_blur": chromatic_blur,
         }
 
-    def process(self, pp: scripts_postprocessing.PostprocessedImage, enable, noise_strength, noise_r, noise_g, noise_b, opacity, chromatic_strength, chromatic_blur):
+    def process(self, pp: scripts_postprocessing.PostprocessedImage, enable, noise_strength, noise_r, noise_g, noise_b, offset_percentage, opacity, chromatic_strength, chromatic_blur):
         if not enable:
             return
 
@@ -42,8 +44,9 @@ class ScriptPostprocessingImageEffect(scripts_postprocessing.ScriptPostprocessin
             noise_g=noise_g,
             noise_b=noise_b,
             opacity=opacity,
+            offset_percentage=offset_percentage,
             chromatic_strength=chromatic_strength,
-            chromatic_blur=chromatic_blur
+            chromatic_blur=chromatic_blur,
         )
 
         pp.image = img
