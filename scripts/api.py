@@ -18,10 +18,18 @@ def licyk_style_image_api(_: gr.Blocks, app: FastAPI):
         noise_r: int = Body(255, title="Noise color (R)"),
         noise_g: int = Body(255, title="Noise color (G)"),
         noise_b: int = Body(255, title="Noise color (B)"),
-        offset_percentage: int = Body(255, title="Noise color offset"),
+        offset_percentage: int = Body(20, title="Noise color offset"),
         opacity: int = Body(128, title="Noise opacity"),
         chromatic_strength: float = Body(0.3, title="Chromatic strength"),
         chromatic_blur: bool = Body(False, title="Blur"),
+        glow_strength: float = Body(0, title="Glow strength"),
+        glow_threshold: float = Body(0.6, title="Glow threshold"),
+        glow_radius: float = Body(3, title="Glow radius (%)"),
+        glow_r: int = Body(255, title="Glow color (R)"),
+        glow_g: int = Body(240, title="Glow color (G)"),
+        glow_b: int = Body(220, title="Glow color (B)"),
+        glow_soft_focus: float = Body(0.3, title="Soft focus"),
+        glow_edge_softness: float = Body(0.2, title="Edge softness"),
     ):
         if uploaded_file:
             image_data = await uploaded_file.read()
@@ -50,7 +58,15 @@ def licyk_style_image_api(_: gr.Blocks, app: FastAPI):
             offset_percentage=offset_percentage,
             opacity=opacity,
             chromatic_strength=chromatic_strength,
-            chromatic_blur=chromatic_blur
+            chromatic_blur=chromatic_blur,
+            glow_strength=glow_strength,
+            glow_threshold=glow_threshold,
+            glow_radius=glow_radius,
+            glow_r=glow_r,
+            glow_g=glow_g,
+            glow_b=glow_b,
+            glow_soft_focus=glow_soft_focus,
+            glow_edge_softness=glow_edge_softness,
         )
 
         return {"image": api.encode_pil_to_base64(img).decode("utf-8")}

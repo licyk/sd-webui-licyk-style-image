@@ -66,9 +66,20 @@ https://github.com/licyk/sd-webui-licyk-style-image
 ## 使用
 扩展安装完成后，可以在 Stable Diffusion WebUI 的**后期处理** -> **Apply licyk style** 使用该扩展。
 
+该扩展也可在**文生图** / **图生图** -> **Apply licyk style** 中使用，启用后将在 VAE 解码后为每张生成的图片添加滤镜，滤镜参数会保存到图片的生成信息中。
+
 ![](./assets/1.jpg)
 
 ![](./assets/2.jpg)
+
+柔光滤镜（类似 VTuber 常用的柔光滤镜）可为图片添加环境光晕、柔焦和边缘柔化效果，`Glow strength` 为 0 时不启用。
+
+- `Glow strength`：环境光晕强度
+- `Glow threshold`：产生光晕的高光亮度阈值
+- `Glow radius (%)`：光晕半径，为图片短边长度的百分比
+- `Glow color (R/G/B)`：光晕颜色
+- `Soft focus`：柔焦，柔化图片中的边缘和线条
+- `Edge softness`：图片四周的边缘柔化雾化强度
 
 
 ## 鸣谢

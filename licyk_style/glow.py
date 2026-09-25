@@ -1,0 +1,112 @@
+"""
+Soft glow effect for image (ambient glow / soft focus / edge haze)
+
+Similar to the glow / bloom filters commonly used in VTuber streaming (OBS shader filters)
+and the Orton effect in photography
+"""
+from typing import Optional
+import numpy as np
+from PIL import Image, ImageFilter
+from PIL.ImageFile import ImageFile
+
+
+def gaussian_blur(data: np.ndarray, radius: float) -> np.ndarray:
+    """
+    Applies Gaussian blur to a float RGB array
+
+    Args:
+        data (np.ndarray): RGB array in [0, 1], shape (H, W, 3)
+        radius (float): Blur radius in pixels
+
+    Returns:
+        np.ndarray: Blurred RGB array in [0, 1]
+    """
+    if radius <= 0:
+        return data
+    img = Image.fromarray(np.uint8(np.clip(data, 0, 1) * 255 + 0.5), "RGB")
+    img = img.filter(ImageFilter.GaussianBlur(radius=radius))
+    return np.asarray(img, dtype=np.float32) / 255
+
+
+def smoothstep(edge0: float, edge1: float, x: np.ndarray) -> np.ndarray:
+    """Hermite interpolation between <edge0> and <edge1>"""
+    t = np.clip((x - edge0) / max(edge1 - edge0, 1e-6), 0, 1)
+    return t * t * (3 - 2 * t)
+
+
+def screen(base: np.ndarray, blend: np.ndarray) -> np.ndarray:
+    """Screen blend mode"""
+    return 1 - (1 - base) * (1 - blend)
+
+
+def soft_light(base: np.ndarray, blend: np.ndarray) -> np.ndarray:
+    """Soft light blend mode (pegtop formula)"""
+    return (1 - 2 * blend) * base * base + 2 * blend * base
+
+
+def add_glow(
+    image: ImageFile,
+    strength: Optional[float] = 0.6,
+    threshold: Optional[float] = 0.6,
+    radius: Optional[float] = 3,
+    color: Optional[tuple[int, int, int]] = (255, 240, 220),
+    soft_focus: Optional[float] = 0.3,
+    edge_softness: Optional[float] = 0.2,
+) -> Image:
+    """
+    Adds ambient glow, soft focus and edge haze to image
+
+    Args:
+        image (ImageFile): Source PIL Image object
+        strength (float, optional): Glow strength [0-2.0] (default: 0.6)
+        threshold (float, optional): Luminance threshold of highlights that glow [0-1.0] (default: 0.6)
+        radius (float, optional): Glow radius as percentage of the image short side (default: 3)
+        color (tuple[int, int, int], optional): RGB tint of the glow (default: (255, 240, 220))
+        soft_focus (float, optional): Opacity of the soft focus layer [0-1.0] (default: 0.3)
+        edge_softness (float, optional): Strength of haze on image edges [0-1.0] (default: 0.2)
+
+    Returns:
+        Image: New Image object with glow effect, keeps the mode (RGB / RGBA) of source image
+    """
+    alpha = image.getchannel("A") if image.mode in ("RGBA", "LA") else None
+    base = np.asarray(image.convert("RGB"), dtype=np.float32) / 255
+    height, width = base.shape[:2]
+    blur_radius = min(width, height) * radius / 100
+
+    # Ambient glow: blur highlights at multiple scales, then screen blend
+    if strength > 0 and blur_radius > 0:
+        luminance = base @ np.array([0.299, 0.587, 0.114], dtype=np.float32)
+        mask = smoothstep(threshold - 0.1, threshold + 0.1, luminance)
+        bright = base * mask[..., None]
+        glow = (
+            gaussian_blur(bright, blur_radius) * 0.5
+            + gaussian_blur(bright, blur_radius * 2) * 0.3
+            + gaussian_blur(bright, blur_radius * 4) * 0.2
+        )
+        glow = glow * (np.array(color, dtype=np.float32) / 255)
+        base = screen(base, np.clip(glow * strength, 0, 1))
+
+    blurred = None
+
+    # Soft focus: soft light blend with the blurred image
+    if soft_focus > 0 and blur_radius > 0:
+        blurred = gaussian_blur(base, blur_radius)
+        base = base + (soft_light(base, blurred) - base) * soft_focus
+
+    # Edge haze: blend image edges into the blurred and lifted image
+    if edge_softness > 0 and blur_radius > 0:
+        if blurred is None:
+            blurred = gaussian_blur(base, blur_radius)
+        y, x = np.ogrid[0:height, 0:width]
+        dist = np.sqrt(
+            ((x - (width - 1) / 2) / (width / 2)) ** 2
+            + ((y - (height - 1) / 2) / (height / 2)) ** 2
+        ) / np.sqrt(2)
+        edge_mask = (np.clip((dist - 0.5) / 0.5, 0, 1) ** 2 * edge_softness)[..., None]
+        haze = screen(blurred, blurred * 0.3)
+        base = base + (haze - base) * edge_mask
+
+    result = Image.fromarray(np.uint8(np.clip(base, 0, 1) * 255 + 0.5), "RGB")
+    if alpha is not None:
+        result.putalpha(alpha)
+    return result

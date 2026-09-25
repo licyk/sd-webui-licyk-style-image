@@ -67,9 +67,20 @@ https://github.com/licyk/sd-webui-licyk-style-image
 ## Usage
 After successful installation, access the extension through: `Postprocessing` -> `Apply licyk style` in Stable Diffusion WebUI.
 
+The extension is also available in `txt2img` / `img2img` -> `Apply licyk style`. When enabled, the filters are applied to every generated image after VAE decoding, and the filter parameters are saved to the image infotext.
+
 ![](./assets/1.jpg)
 
 ![](./assets/2.jpg)
+
+The glow filter (similar to the soft glow filter commonly used by VTubers) adds ambient glow, soft focus and edge haze to the image. It is disabled when `Glow strength` is 0.
+
+- `Glow strength`: Strength of the ambient glow
+- `Glow threshold`: Luminance threshold of highlights that glow
+- `Glow radius (%)`: Glow radius, as a percentage of the image short side
+- `Glow color (R/G/B)`: Tint of the glow
+- `Soft focus`: Softens edges and lines in the image
+- `Edge softness`: Haze on the image borders
 
 
 ## Acknowledgements
