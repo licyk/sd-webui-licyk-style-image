@@ -1,14 +1,14 @@
 import launch
 import importlib.metadata
 from pathlib import Path
-from typing import Tuple, Optional
+from typing import Optional
 
 
 repo_root = Path(__file__).parent
 main_req_file = repo_root / "requirements.txt"
 
 
-def comparable_version(version: str) -> Tuple:
+def comparable_version(version: str) -> tuple:
     return tuple(version.split("."))
 
 

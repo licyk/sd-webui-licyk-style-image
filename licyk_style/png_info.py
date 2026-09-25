@@ -9,12 +9,12 @@ from PIL.ImageFile import ImageFile
 
 
 def get_image_info(
-    image: ImageFile,
+    image: Image.Image,
 ) -> dict:
     """
     Get png info from image object
     Args:
-        image (ImageFile): PIL Image object containing file format metadata
+        image (Image.Image): PIL Image object containing file format metadata
             (typically from PNG/TIFF/JPG files)
 
     Returns:
@@ -43,7 +43,7 @@ def open_image(image_path: str | Path) -> ImageFile:
 
 
 def save_image(
-    image: ImageFile,
+    image: Image.Image,
     output_path: str | Path,
     png_info: Optional[dict] = None
 ) -> None:
@@ -51,7 +51,7 @@ def save_image(
     Saves a PIL Image object to the specified path with optional PNG metadata.
 
     Args:
-        image (Image): PIL Image object to be saved
+        image (Image.Image): PIL Image object to be saved
         output_path (str | Path): Destination path for the image file. Must have .png extension
         png_info (Optional[dict]): Dictionary containing PNG metadata key-value pairs
 

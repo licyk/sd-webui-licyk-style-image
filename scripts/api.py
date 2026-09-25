@@ -1,3 +1,4 @@
+import asyncio
 import requests
 import gradio as gr
 from fastapi import FastAPI, Body, UploadFile, File, HTTPException
@@ -36,15 +37,15 @@ def licyk_style_image_api(_: gr.Blocks, app: FastAPI):
             img = Image.open(BytesIO(image_data))
         elif image_url:
             try:
-                response = requests.get(image_url)
+                response = await asyncio.to_thread(requests.get, image_url)
                 response.raise_for_status()
                 img = Image.open(BytesIO(response.content))
             except Exception as e:
-                raise HTTPException(400, f"Download image failed: {str(e)}")
+                raise HTTPException(400, f"Download image failed: {e!s}")
         elif input_image:
             try:
                 img = api.decode_base64_to_image(input_image)
-            except:
+            except Exception:
                 raise HTTPException(400, "Base64 decode failed")
         else:
             raise HTTPException(400, "Need to provide (File / URL / Base64)")
@@ -75,5 +76,5 @@ try:
     import modules.script_callbacks as script_callbacks
 
     script_callbacks.on_app_started(licyk_style_image_api)
-except:
+except Exception:
     pass

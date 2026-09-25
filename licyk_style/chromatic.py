@@ -8,8 +8,6 @@ thanks: KohakuBlueleaf
 import math
 import numpy as np
 from PIL import Image
-from PIL.ImageFile import ImageFile
-from typing import List
 
 
 def cartesian_to_polar(data: np.ndarray) -> np.ndarray:
@@ -38,7 +36,7 @@ def cartesian_to_polar(data: np.ndarray) -> np.ndarray:
     # Divide the image into 8 triangles, and use the same calculation on
     # 4 triangles at a time. This is possible due to symmetry.
     # This section is also responsible for the corner pixels
-    for i in range(0, halfh):
+    for i in range(halfh):
         slope = (halfh - i) / (halfw)
         diagx = ((halfdiag**2) / (slope**2 + 1)) ** 0.5
         unit_xstep = diagx / (halfdiag - 1)
@@ -79,7 +77,7 @@ def cartesian_to_polar(data: np.ndarray) -> np.ndarray:
     return ret
 
 
-def get_gauss(n: int) -> List[float]:
+def get_gauss(n: int) -> list[float]:
     """Return the Gaussian 1D kernel for a diameter of <n>
     Referenced from: https://stackoverflow.com/questions/11209115/
     """
@@ -117,7 +115,7 @@ def vertical_gaussian(data: np.ndarray, n: int) -> np.ndarray:
     padded_data = np.zeros((height + padding * 2, width))
     padded_data[padding:-padding, :] = data
     ret = np.zeros((height, width))
-    kernel = None
+    kernel = np.empty(0)
     old_radius = -1
     for i in range(height):
         radius = round(i * padding / (height - 1)) + 1
@@ -174,7 +172,7 @@ def polar_to_cartesian(data: np.ndarray, width: int, height: int) -> np.ndarray:
     # Same code as above, except the order of the assignments are switched
     # Code blocks are split up for easier profiling
     def part1():
-        for i in range(0, halfh):
+        for i in range(halfh):
             slope = (halfh - i) / (halfw)
             diagx = ((halfdiag**2) / (slope**2 + 1)) ** 0.5
             unit_xstep = diagx / (halfdiag - 1)
@@ -231,7 +229,7 @@ def polar_to_cartesian(data: np.ndarray, width: int, height: int) -> np.ndarray:
     return ret
 
 
-def add_chromatic(im: ImageFile, strength: float = 1, no_blur: bool = False) -> Image:
+def add_chromatic(im: Image.Image, strength: float = 1, no_blur: bool = False) -> Image.Image:
     """Splits <im> into red, green, and blue channels, then performs a
     1D Vertical Gaussian blur through a polar representation. Finally,
     it expands the green and blue channels slightly.

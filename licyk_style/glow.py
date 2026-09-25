@@ -4,10 +4,8 @@ Soft glow effect for image (ambient glow / soft focus / edge haze)
 Similar to the glow / bloom filters commonly used in VTuber streaming (OBS shader filters)
 and the Orton effect in photography
 """
-from typing import Optional
 import numpy as np
 from PIL import Image, ImageFilter
-from PIL.ImageFile import ImageFile
 
 
 def gaussian_blur(data: np.ndarray, radius: float) -> np.ndarray:
@@ -45,19 +43,19 @@ def soft_light(base: np.ndarray, blend: np.ndarray) -> np.ndarray:
 
 
 def add_glow(
-    image: ImageFile,
-    strength: Optional[float] = 0.6,
-    threshold: Optional[float] = 0.6,
-    radius: Optional[float] = 3,
-    color: Optional[tuple[int, int, int]] = (255, 240, 220),
-    soft_focus: Optional[float] = 0.3,
-    edge_softness: Optional[float] = 0.2,
-) -> Image:
+    image: Image.Image,
+    strength: float = 0.6,
+    threshold: float = 0.6,
+    radius: float = 3,
+    color: tuple[int, int, int] = (255, 240, 220),
+    soft_focus: float = 0.3,
+    edge_softness: float = 0.2,
+) -> Image.Image:
     """
     Adds ambient glow, soft focus and edge haze to image
 
     Args:
-        image (ImageFile): Source PIL Image object
+        image (Image.Image): Source PIL Image object
         strength (float, optional): Glow strength [0-2.0] (default: 0.6)
         threshold (float, optional): Luminance threshold of highlights that glow [0-1.0] (default: 0.6)
         radius (float, optional): Glow radius as percentage of the image short side (default: 3)
@@ -66,7 +64,7 @@ def add_glow(
         edge_softness (float, optional): Strength of haze on image edges [0-1.0] (default: 0.2)
 
     Returns:
-        Image: New Image object with glow effect, keeps the mode (RGB / RGBA) of source image
+        Image.Image: New Image object with glow effect, keeps the mode (RGB / RGBA) of source image
     """
     alpha = image.getchannel("A") if image.mode in ("RGBA", "LA") else None
     base = np.asarray(image.convert("RGB"), dtype=np.float32) / 255

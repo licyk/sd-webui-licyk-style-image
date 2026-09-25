@@ -1,30 +1,28 @@
 """
 Process for an image
 """
-from typing import Optional
 import numpy as np
 from PIL import Image
-from PIL.ImageFile import ImageFile
 from .chromatic import add_chromatic
 from .noise import add_noise
 from .glow import add_glow
 
 
 def run_chromatic(
-    img: Image,
+    img: Image.Image,
     strength: float,
-    blur: Optional[bool] = False
-) -> Image:
+    blur: bool = False
+) -> Image.Image:
     """
     Applies chromatic aberration effect to an image
 
     Args:
-        img (Image): Source PIL image object
+        img (Image.Image): Source PIL image object
         strength (float): Chromatic aberration strength parameter (suggested range: 0.0-1.0)
         blur (bool, optional): Enable blur processing, defaults to False
 
     Returns:
-        Image: Processed PIL image object
+        Image.Image: Processed PIL image object
 
     Note:
         - Automatically adjusts image dimensions to odd numbers during processing,
@@ -54,17 +52,17 @@ def run_chromatic(
 
 
 def run_noise(
-    image: ImageFile,
-    noise_level: Optional[float] = 0.4,
-    noise_color: Optional[tuple[int, int, int]] = (255, 255, 255),
-    opacity: Optional[int] = 128,
-    offset_percentage: Optional[int] = 20,
-) -> Image:
+    image: Image.Image,
+    noise_level: float = 0.4,
+    noise_color: tuple[int, int, int] = (255, 255, 255),
+    opacity: int = 128,
+    offset_percentage: int = 20,
+) -> Image.Image:
     """
     Applies noise effect to an image
 
     Args:
-        image (ImageFile): Source PIL Image object (RGBA mode recommended)
+        image (Image.Image): Source PIL Image object (RGBA mode recommended)
         noise_level (float, optional): Noise density [0-1.0]
             0.0 = no noise, 1.0 = full coverage (default: 0.1)
         noise_color (tuple[int, int, int], optional): RGB noise color 
@@ -74,7 +72,7 @@ def run_noise(
         offset_percentage (int): Percentage range for offset (0-100) (default: 20)
 
     Returns:
-        Image: New Image object with noise layer composited
+        Image.Image: New Image object with noise layer composited
     """
     return add_noise(
         image=image,
@@ -86,19 +84,19 @@ def run_noise(
 
 
 def run_glow(
-    image: ImageFile,
-    strength: Optional[float] = 0.6,
-    threshold: Optional[float] = 0.6,
-    radius: Optional[float] = 3,
-    color: Optional[tuple[int, int, int]] = (255, 240, 220),
-    soft_focus: Optional[float] = 0.3,
-    edge_softness: Optional[float] = 0.2,
-) -> Image:
+    image: Image.Image,
+    strength: float = 0.6,
+    threshold: float = 0.6,
+    radius: float = 3,
+    color: tuple[int, int, int] = (255, 240, 220),
+    soft_focus: float = 0.3,
+    edge_softness: float = 0.2,
+) -> Image.Image:
     """
     Applies soft glow effect (ambient glow / soft focus / edge haze) to an image
 
     Args:
-        image (ImageFile): Source PIL Image object
+        image (Image.Image): Source PIL Image object
         strength (float, optional): Glow strength [0-2.0], 0 = disabled (default: 0.6)
         threshold (float, optional): Luminance threshold of highlights that glow [0-1.0] (default: 0.6)
         radius (float, optional): Glow radius as percentage of the image short side (default: 3)
@@ -107,7 +105,7 @@ def run_glow(
         edge_softness (float, optional): Strength of haze on image edges [0-1.0] (default: 0.2)
 
     Returns:
-        Image: Processed PIL image object
+        Image.Image: Processed PIL image object
     """
     if strength <= 0:
         return image
@@ -124,7 +122,7 @@ def run_glow(
 
 
 def run(
-    image: Image,
+    image: Image.Image,
     noise_strength: float,
     noise_r: int,
     noise_g: int,
@@ -141,7 +139,7 @@ def run(
     glow_b: int = 220,
     glow_soft_focus: float = 0.3,
     glow_edge_softness: float = 0.2,
-) -> Image:
+) -> Image.Image:
     image = run_glow(
         image=image,
         strength=glow_strength,
